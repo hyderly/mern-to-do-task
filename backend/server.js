@@ -7,6 +7,7 @@ import errorHandler from './middlewares/errorHandler.js';
 
 // Routes
 import userRoutes from "./routes/userRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/tasks", taskRoutes);
 
 
 app.use(errorHandler)

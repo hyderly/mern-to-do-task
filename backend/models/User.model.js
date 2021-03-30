@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: "String",
       required: [true, "Please Enter Password"],
     },
+    isAdmin: {
+      type: "String",
+      default: false
+      
+    }
   },
   { timestamp: true }
 );

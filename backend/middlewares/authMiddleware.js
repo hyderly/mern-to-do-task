@@ -33,6 +33,8 @@ export const adminProtectRoute = (req, res, next) => {
     next();
   } else {
     res.status(401);
+    console.log(req.user)
     throw new Error("Not autherized as an admin");
+    
   }
 };
