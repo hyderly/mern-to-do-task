@@ -1,24 +1,23 @@
 import express from "express";
 const router = express.Router();
 
-
-import {createTask, getTasks, updateTaskById, deleteTaskById} from '../controllers/taskController.js';
-
+import {
+  createTask,
+  getTasks,
+  updateTaskById,
+  deleteTaskById,
+  getTaskById,
+} from "../controllers/taskController.js";
 
 // Auth Middleware
-import { protectRoute, adminProtectRoute } from "../middlewares/authMiddleware.js";
+import { protectRoute } from "../middlewares/authMiddleware.js";
 
-
-router
-    .route("/")
-    .post(protectRoute, createTask)
-    .get(protectRoute, getTasks)
+router.route("/").post(protectRoute, createTask).get(protectRoute, getTasks);
 
 router
-    .route("/:id")
-    .put(protectRoute, updateTaskById)
-    .delete(protectRoute, deleteTaskById)
-
-
+  .route("/:id")
+  .put(protectRoute, updateTaskById)
+  .delete(protectRoute, deleteTaskById)
+  .get(protectRoute, getTaskById);
 
 export default router;
