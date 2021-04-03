@@ -12,8 +12,9 @@ import {
   getUserProfileById,
   updateProfileById,
   deleteProfileById,
-  forgotpassword,
+  forgotPassword,
   resetPassword,
+  emailVerify,
 } from "../controllers/userController.js";
 
 // Auth Middleware
@@ -24,8 +25,9 @@ import {
 
 router.post("/register", registerUser);
 router.post("/login", authUser);
-router.post("/forgotpassword", forgotpassword);
+router.post("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:resettoken", resetPassword);
+router.put("/emailverify/:verifytoken", emailVerify);
 
 router
   .route("/profile")

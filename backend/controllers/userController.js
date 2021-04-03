@@ -27,17 +27,70 @@ export const registerUser = asyncHandler(async (req, res) => {
   const user = await UserModel.create({ name, email, password, isAdmin });
 
   if (user) {
-    res.status(201).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error("Invalid mail or password");
+    const verifyToken = user.getemailVerifyToken();
+
+    user.save({ validateBeforeSave: false });
+
+    // Create reset URL
+    const verifyUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/api/users/emailverify/${verifyToken}`;
+
+    const message = `Your reset password link ${verifyUrl}`;
+
+    try {
+      await sendMail({
+        email,
+        subject: "Email Verification Token",
+        message,
+      });
+
+      res
+        .status(200)
+        .json({ success: true, message: "Verification Email Sent" });
+    } catch (error) {
+      console.log(error);
+      user.emailVerifyToken = undefined;
+      user.emailVerifyExpire = undefined;
+
+      await user.save({ validateBeforeSave: false });
+
+      res.status(500);
+      throw new Error("Email could not be sent");
+    }
   }
+});
+
+// Request: PUT
+// Route: PUT /api/users/emailverify/:verifytoken
+// Access: Public
+
+export const emailVerify = asyncHandler(async (req, res) => {
+  const emailVerifyToken = crypto
+    .createHash("sha256")
+    .update(req.params.verifytoken)
+    .digest("hex");
+
+  const user = await UserModel.findOne({
+    emailVerifyToken,
+    emailVerifyExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid Token");
+  }
+
+  // Set Email verified
+  user.emailVerify = true;
+  user.emailVerifyToken = undefined;
+  user.emailVerifyExpire = undefined;
+  await user.save();
+
+  res.status(200).json({
+    user,
+    token: generateToken(user._id),
+  });
 });
 
 // Request: POST
@@ -54,6 +107,11 @@ export const authUser = asyncHandler(async (req, res) => {
   if (!isMatch) {
     res.status(400);
     throw new Error("Wrong email or password");
+  }
+
+  if (!user.emailVerify) {
+    res.status(400);
+    throw new Error("Pleae check your email to verify");
   }
 
   if (!email || !password) {
@@ -82,7 +140,7 @@ export const authUser = asyncHandler(async (req, res) => {
 // Request: POST Forgot password
 // Route: POST /api/users/forgotpassword
 // Access: Public
-export const forgotpassword = asyncHandler(async (req, res, next) => {
+export const forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await UserModel.findOne({ email: req.body.email });
 
   if (!user) {
@@ -124,7 +182,6 @@ export const forgotpassword = asyncHandler(async (req, res, next) => {
 // Request: PUT Reset Password
 // Route: PUT /api/users/resetpassword/:resettoken
 // Access: Public
-
 export const resetPassword = asyncHandler(async (req, res) => {
   const resetPasswordToken = crypto
     .createHash("sha256")
