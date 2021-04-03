@@ -13,6 +13,7 @@ import {
   updateProfileById,
   deleteProfileById,
   forgotpassword,
+  resetPassword,
 } from "../controllers/userController.js";
 
 // Auth Middleware
@@ -24,6 +25,7 @@ import {
 router.post("/register", registerUser);
 router.post("/login", authUser);
 router.post("/forgotpassword", forgotpassword);
+router.put("/resetpassword/:resettoken", resetPassword);
 
 router
   .route("/profile")

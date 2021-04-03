@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
+import crypto from "crypto";
 
 import sendMail from "../utils/sendEmail.js";
 
@@ -79,7 +79,7 @@ export const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Request: POST
+// Request: POST Forgot password
 // Route: POST /api/users/forgotpassword
 // Access: Public
 export const forgotpassword = asyncHandler(async (req, res, next) => {
@@ -88,7 +88,6 @@ export const forgotpassword = asyncHandler(async (req, res, next) => {
   if (!user) {
     res.status(400);
     throw new Error("User Not Found");
-    next();
   }
 
   const resetToken = user.getResetPasswordToken();
@@ -120,10 +119,37 @@ export const forgotpassword = asyncHandler(async (req, res, next) => {
     res.status(500);
     throw new Error("Email could not be sent");
   }
+});
+
+// Request: PUT Reset Password
+// Route: PUT /api/users/resetpassword/:resettoken
+// Access: Public
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resettoken)
+    .digest("hex");
+
+  const user = await UserModel.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid Token");
+  }
+
+  // Set new password
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
 
   res.status(200).json({
-    success: true,
-    data: user,
+    user,
+    token: generateToken(user._id),
   });
 });
 
