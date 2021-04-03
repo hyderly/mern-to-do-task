@@ -1,0 +1,29 @@
+.nav-box {
+  background-color: var(--component-main);
+  padding: 15px 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f7f7f7;
+}
+
+.nav-title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 5px;
+}
+
+.nav-links {
+  font-size: 18px;
+  font-size: 300;
+  letter-spacing: 3px;
+  margin-right: 40px;
+}

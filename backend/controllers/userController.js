@@ -101,17 +101,17 @@ export const authUser = asyncHandler(async (req, res) => {
 
   const user = await UserModel.findOne({ email });
 
+  if (!user.emailVerify) {
+    res.status(400);
+    throw new Error("Please check your email to verify");
+  }
+
   // Check password
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
     res.status(400);
     throw new Error("Wrong email or password");
-  }
-
-  if (!user.emailVerify) {
-    res.status(400);
-    throw new Error("Pleae check your email to verify");
   }
 
   if (!email || !password) {
