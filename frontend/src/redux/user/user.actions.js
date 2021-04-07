@@ -32,7 +32,7 @@ export const userRegisterAction = (
   } catch (error) {
     dispatch({
       type: UserRegisterTypes.USER_REGISTER_FAIL,
-      payload: error.response.data.error,
+      payload: error.response?.data.error,
     });
   }
 };

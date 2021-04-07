@@ -1,6 +1,6 @@
 import { UserRegisterTypes } from "./user.types";
 
-export const userRegister = (state = {}, action) => {
+export const userRegister = (state = { success: false }, action) => {
   switch (action.type) {
     case UserRegisterTypes.USER_REGISTER_REQUEST:
       return {
@@ -11,8 +11,8 @@ export const userRegister = (state = {}, action) => {
     case UserRegisterTypes.USER_REGISTER_SUCCESS:
       return {
         loading: false,
-        user: action.payload,
         success: true,
+        message: action.payload.message,
       };
 
     case UserRegisterTypes.USER_REGISTER_FAIL:
@@ -20,6 +20,7 @@ export const userRegister = (state = {}, action) => {
         ...state,
         error: action.payload,
         loading: false,
+        message: action.payload.message,
       };
 
     default:
