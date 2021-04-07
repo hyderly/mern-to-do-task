@@ -1,0 +1,17 @@
+.register-box {
+  max-width: 30%;
+  height: auto;
+  padding: 50px 100px;
+  background-color: var(--component-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-title {
+  border-bottom: 3px solid #fff;
+  padding-bottom: 10px;
+}
+
+
