@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import ErrorResponse from "../ErrorResponse/errorResponse.component";
+
 import swal from "sweetalert";
 
 import { userRegisterAction } from "../../redux/user/user.actions";
@@ -20,24 +22,22 @@ const RegisterForm = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (password === confirmPassword) {
-      dispatch(userRegisterAction(name, email, password, confirmPassword));
+    dispatch(userRegisterAction(name, email, password, confirmPassword));
 
-      if (success) {
-        swal("You Are Registered", "Pleae Check Verfication Email");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-      }
+    if (success) {
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     }
   };
 
   return (
-    <div className="register-box">
-      {/* {error && swal("bad job!", "You clicked the button!", "success")}
-      {success && swal("Good job!", "You clicked the button!", "success")} */}
-      <h1 className="register-title">User Register</h1>
+    <div className="form-box">
+      {success && <ErrorResponse styleType="success">{message}</ErrorResponse>}
+      {error && <ErrorResponse styleType="danger">{error}</ErrorResponse>}
+
+      <h1 className="form-title">User Register</h1>
       <form onSubmit={submitHandler}>
         <input
           type="text"
@@ -65,12 +65,13 @@ const RegisterForm = () => {
         />
         <div className="btn-box">
           <button className="submit-btn" type="submit">
-            {loading && (
+            {loading ? (
               <div class="lds-ripple">
                 <div></div>
               </div>
+            ) : (
+              <span>Register</span>
             )}
-            Register
           </button>
           {/* <button className="reset-btn" onClick={resetFields}>
             Reset

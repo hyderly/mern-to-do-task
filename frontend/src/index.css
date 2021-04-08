@@ -53,7 +53,7 @@ button {
   outline: none;
   color: #fff;
   padding: 10px 20px;
-  margin-left: 20px;
+  margin-right: 30px;
 }
 
 button:hover {
@@ -62,6 +62,12 @@ button:hover {
 
 .submit-btn {
   background-color: var(--background);
+  padding: 10px 40px;
+  font-size: 18px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
 }
 
 .reset-btn {

@@ -4,13 +4,23 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 
-import { userRegister } from "./user/user.reducer";
+import { userRegister, userVerify, userLogin } from "./user/user.reducer";
 
 const middlewares = [thunk];
 
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+
 const rootReducers = combineReducers({
   userRegistered: userRegister,
+  userVerified: userVerify,
+  userLogin: userLogin,
 });
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+};
 
 if (process.env.NODE_ENV === "development") {
   middlewares.push(logger);
@@ -18,6 +28,7 @@ if (process.env.NODE_ENV === "development") {
 
 const store = createStore(
   rootReducers,
+  initialState,
   composeWithDevTools(applyMiddleware(...middlewares))
 );
 

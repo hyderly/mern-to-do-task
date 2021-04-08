@@ -1,0 +1,22 @@
+.danger {
+  height: auto;
+  padding: 10px 12px;
+  background-color: rgba(150, 2, 2, 0.651);
+  width: 80%;
+  color: #f7f7f7;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.success {
+  height: auto;
+  padding: 10px 12px;
+  background-color: rgba(2, 158, 98, 0.651);
+  width: 80%;
+  color: #f7f7f7;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}

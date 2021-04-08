@@ -1,4 +1,8 @@
-import { UserRegisterTypes } from "./user.types";
+import {
+  UserRegisterTypes,
+  UserVerifyTypes,
+  UserLoginTypes,
+} from "./user.types";
 
 export const userRegister = (state = { success: false }, action) => {
   switch (action.type) {
@@ -20,7 +24,61 @@ export const userRegister = (state = { success: false }, action) => {
         ...state,
         error: action.payload,
         loading: false,
+        message: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const userVerify = (state = {}, action) => {
+  switch (action.type) {
+    case UserVerifyTypes.USER_VERIFY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case UserVerifyTypes.USER_VERIFY_SUCCESS:
+      return {
+        loading: false,
+        success: true,
         message: action.payload.message,
+      };
+
+    case UserVerifyTypes.USER_VERIFY_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const userLogin = (state = { success: false }, action) => {
+  switch (action.type) {
+    case UserLoginTypes.USER_LOGIN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case UserLoginTypes.USER_LOGIN_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        userInfo: action.payload,
+      };
+
+    case UserLoginTypes.USER_LOGIN_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
       };
 
     default:

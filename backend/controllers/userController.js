@@ -32,9 +32,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const verifyUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/users/emailverify/${verifyToken}`;
+    const verifyUrl = `${req.protocol}://localhost:3000/verify/${verifyToken}`;
 
     const message = `Your reset password link ${verifyUrl}`;
 
@@ -78,7 +76,7 @@ export const emailVerify = asyncHandler(async (req, res) => {
 
   if (!user) {
     res.status(400);
-    throw new Error("Invalid Token");
+    throw new Error("User Verification Error");
   }
 
   // Set Email verified
@@ -88,7 +86,7 @@ export const emailVerify = asyncHandler(async (req, res) => {
   await user.save();
 
   res.status(200).json({
-    user,
+    message: "Successfuly Verified",
     token: generateToken(user._id),
   });
 });
@@ -101,7 +99,12 @@ export const authUser = asyncHandler(async (req, res) => {
 
   const user = await UserModel.findOne({ email });
 
-  if (!user.emailVerify) {
+  if (!user) {
+    res.status(400);
+    throw new Error("Wrong email or password");
+  }
+
+  if (user && !user.emailVerify) {
     res.status(400);
     throw new Error("Please check your email to verify");
   }
@@ -119,19 +122,14 @@ export const authUser = asyncHandler(async (req, res) => {
     throw new Error("Please Enter email and password");
   }
 
-  if (!user) {
-    res.status(400);
-    throw new Error("Wrong email or password");
-  }
-
   if (user && (await user.matchPassword(password))) {
     res.status(200);
     res.json({
       id: user._id,
       isAdmin: user.isAdmin,
       name: user.name,
+      emailVerify: user.emailVerify,
       email,
-      password,
       token: generateToken(user._id),
     });
   }
