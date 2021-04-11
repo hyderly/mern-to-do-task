@@ -13,14 +13,10 @@ const Nav = ({ history }) => {
   const { userInfo } = userLogin;
 
   const userLogout = () => {
-    dispatch(logoutAction());
+    // dispatch(logoutAction());
+    // console.log("user Logout");
+    localStorage.removeItem("userInfo");
   };
-
-  useEffect(() => {
-    if (!userInfo) {
-      history.push("/login");
-    }
-  }, [history, userInfo]);
 
   return (
     <div className="nav-box">
@@ -35,7 +31,7 @@ const Nav = ({ history }) => {
           Account
         </Link>
         {userInfo ? (
-          <Link className="nav-links" onClick={userLogout}>
+          <Link to="/login" className="nav-links" onClick={userLogout}>
             {userInfo.name}(logout)
           </Link>
         ) : (

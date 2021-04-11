@@ -58,7 +58,9 @@ const LoginForm = ({ history }) => {
               <span>Login</span>
             )}
           </button>
-          <Link className="forgot-password">Forgot Password?</Link>
+          <Link to="/forgotpassword" className="forgot-password">
+            Forgot Password?
+          </Link>
         </div>
       </form>
     </div>

@@ -4,6 +4,7 @@ import {
   UserRegisterTypes,
   UserVerifyTypes,
   UserLoginTypes,
+  UserForgotPasswordTypes,
 } from "./user.types";
 
 export const userRegisterAction = (
@@ -103,4 +104,32 @@ export const logoutAction = () => (dispatch) => {
   dispatch({
     type: UserLoginTypes.USER_LOGOUT,
   });
+};
+
+export const forgotPasswordAction = (email) => async (dispatch) => {
+  try {
+    dispatch({ type: UserForgotPasswordTypes.USER_FORGOT_PASSWORD_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      "/api/users/forgotpassword",
+      { email },
+      config
+    );
+
+    dispatch({
+      type: UserForgotPasswordTypes.USER_FORGOT_PASSWORD_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: UserForgotPasswordTypes.USER_FORGOT_PASSWORD_FAIL,
+      payload: error.response?.data.error,
+    });
+  }
 };

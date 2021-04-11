@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 import "./verifyPage.styles.css";
 
-import ErrorResponse from "../../components/ErrorResponse/errorResponse.component";
 import Loader from "../../components/Loader/loader.component";
 
 import { userVerificationAction } from "../../redux/user/user.actions";
@@ -14,7 +13,7 @@ const VerifyPage = ({ match }) => {
 
   const dispatch = useDispatch();
   const userVerified = useSelector((state) => state.userVerified);
-  const { loading, success, message, error } = userVerified;
+  const { loading, success, error } = userVerified;
 
   useEffect(() => {
     dispatch(userVerificationAction(verifyToken));

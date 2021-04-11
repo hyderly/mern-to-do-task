@@ -2,6 +2,7 @@ import {
   UserRegisterTypes,
   UserVerifyTypes,
   UserLoginTypes,
+  UserForgotPasswordTypes,
 } from "./user.types";
 
 export const userRegister = (state = { success: false }, action) => {
@@ -75,6 +76,33 @@ export const userLogin = (state = { success: false }, action) => {
       };
 
     case UserLoginTypes.USER_LOGIN_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const forgotPassword = (state = {}, action) => {
+  switch (action.type) {
+    case UserForgotPasswordTypes.USER_FORGOT_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case UserForgotPasswordTypes.USER_FORGOT_PASSWORD_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        message: action.payload.message,
+      };
+
+    case UserForgotPasswordTypes.USER_FORGOT_PASSWORD_FAIL:
       return {
         ...state,
         error: action.payload,

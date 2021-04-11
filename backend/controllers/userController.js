@@ -151,9 +151,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   user.save({ validateBeforeSave: false });
 
   // Create reset URL
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/users/resetpassword/${resetToken}`;
+  const resetUrl = `${req.protocol}://localhost:3000/resetpassword/${resetToken}`;
 
   const message = `Your reset password link ${resetUrl}`;
 
@@ -197,6 +195,10 @@ export const resetPassword = asyncHandler(async (req, res) => {
   }
 
   // Set new password
+  if (req.body.password !== req.body.confirmPassword) {
+    res.status(400);
+    throw new Error("Password does not matched");
+  }
   user.password = req.body.password;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
